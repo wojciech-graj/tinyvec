@@ -703,6 +703,13 @@ impl<A: Array> ArrayVec<A> {
     self.len == 0
   }
 
+  /// Checks if the length is equal to capacity.
+  #[inline(always)]
+  #[must_use]
+  pub fn is_full(&self) -> bool {
+    self.len() == self.capacity()
+  }
+
   /// The length of the `ArrayVec` (in elements).
   #[inline(always)]
   #[must_use]
@@ -1331,6 +1338,17 @@ impl<A> ArrayVec<A> {
   #[must_use]
   pub const fn as_inner(&self) -> &A {
     &self.data
+  }
+
+  /// Returns a mutable reference to the inner array of the `ArrayVec`.
+  ///
+  /// This returns the full array, even if the `ArrayVec` length is currently
+  /// less than that.
+  #[inline(always)]
+  #[must_use]
+  #[cfg(feature = "latest_stable_rust")]
+  pub const fn as_mut_inner(&mut self) -> &mut A {
+    &mut self.data
   }
 }
 

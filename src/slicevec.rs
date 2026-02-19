@@ -293,6 +293,13 @@ impl<'s, T> SliceVec<'s, T> {
     self.len == 0
   }
 
+  /// Checks if the length is equal to capacity.
+  #[inline(always)]
+  #[must_use]
+  pub fn is_full(&self) -> bool {
+    self.len() == self.capacity()
+  }
+
   /// The length of the `SliceVec` (in elements).
   #[inline(always)]
   #[must_use]
@@ -631,6 +638,29 @@ impl<'s, T> SliceVec<'s, T> {
     } else {
       None
     }
+  }
+}
+
+impl<'s, T> SliceVec<'s, T> {
+  /// Returns the reference to the inner slice of the `SliceVec`.
+  ///
+  /// This returns the full array, even if the `SliceVec` length is currently
+  /// less than that.
+  #[inline(always)]
+  #[must_use]
+  pub const fn as_inner(&self) -> &[T] {
+    &*self.data
+  }
+
+  /// Returns a mutable reference to the inner slice of the `SliceVec`.
+  ///
+  /// This returns the full array, even if the `SliceVec` length is currently
+  /// less than that.
+  #[inline(always)]
+  #[must_use]
+  #[cfg(feature = "latest_stable_rust")]
+  pub const fn as_mut_inner(&mut self) -> &mut [T] {
+    self.data
   }
 }
 
